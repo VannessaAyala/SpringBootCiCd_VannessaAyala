@@ -1,4 +1,4 @@
-#Irving Martinez
+#Vannessa Ayala
 # Etapa 1: Build
 FROM gradle:8.4-jdk17 AS builder
 WORKDIR /app
