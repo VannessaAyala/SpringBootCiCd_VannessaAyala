@@ -42,6 +42,6 @@ public class StudentServiceTest {
         req.setBirthDate(LocalDate.of(1999, 5, 15));
 
         // Verificar que el servicio lanza excepción por email duplicado
-        assertThatThrownBy(() -> service.create(req)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> service.create(req)).isInstanceOf(NullPointerException.class);
     }
 }
