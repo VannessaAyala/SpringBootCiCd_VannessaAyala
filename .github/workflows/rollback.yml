@@ -18,7 +18,7 @@ jobs:
 
       - name: 🔑 Set variables
         run: |
-          echo "RENDER_SERVICE_ID=srv-d4co8ak9c44c738ugpbg" >> $GITHUB_ENV
+          echo "RENDER_SERVICE_ID=srv-d7v5asjtqb8s73f4vqug" >> $GITHUB_ENV
 
       - name: 📥 Obtener lista de deploys desde Render
         run: |
