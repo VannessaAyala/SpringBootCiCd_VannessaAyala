@@ -12,39 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Generar versión de despliegue
+      - name: Generate deploy version
         run: |
           VERSION="${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:7}"
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Generated version: $VERSION"
 
-      - name: Insertar versión en application.yml
+      - name: Trigger Render Deploy Hook
         run: |
-          sed -i "s/app.version:.*/app.version: ${APP_VERSION}/" src/main/resources/application.yml
-          echo "Nueva version aplicada: ${APP_VERSION}"
-
-      - name: Trigger Render Deploy Hook con manejo de error
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$RENDER_DEPLOY_HOOK")
-          echo "Render returned HTTP $STATUS"
-          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 300 ]; then
-            echo "Render deploy failed"
-            exit 1
-          fi
+          curl -X POST "$RENDER_DEPLOY_HOOK"
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
-
-  rollback:
-    needs: deploy
-    if: ${{ failure() }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Trigger rollback workflow
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "Rollback - Render Deploy"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP_VERSION: ${{ env.APP_VERSION }}
