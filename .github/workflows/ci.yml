@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
@@ -25,8 +26,5 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew clean build --no-daemon
-
-      - name: Run Test
-        run: ./gradlew test --no-daemon
+      - name: Build and Test
+        run: ./gradlew clean test --no-daemon
